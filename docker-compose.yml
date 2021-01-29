@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   begeby:
@@ -8,11 +8,11 @@ services:
       dockerfile: Dockerfile
     image: begeby
     ports:
-      - '3000:3000'
+      - "3000:3000"
     volumes:
-      - '.:/app'
-      - '/app/node_modules'
-      - '/var/www/begeby/.next'
+      - ".:/app"
+      - "/app/node_modules"
+      - "/app/.next"
     environment:
       - CHOKIDAR_USEPOLLING=true
 #     networks:
