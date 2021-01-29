@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  begeby:
+    container_name: begeby
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: begeby
+    ports:
+      - '3000:3000'
+    volumes:
+      - '.:/app'
+      - '/app/node_modules'
+      - '/var/www/begeby/.next'
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+#     networks:
+#       begeby-network:
+
+# networks:
+#   begeby-network:
+#     external: true
