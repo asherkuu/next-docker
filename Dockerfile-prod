@@ -1,0 +1,41 @@
+# STEP: 1 - Specifies where to get the base image (Node v12 in our case) and creates a new container for it
+FROM node:15 as builder
+
+# STEP: 2 - Set working directory. Paths will be relative this WORKDIR.
+WORKDIR /app
+
+# STEP: 3
+ENV PATH /app/node_modules/.bin:$PATH
+
+# STEP: 4 - Install dependencies
+COPY package*.json ./
+
+# STEP: 5
+RUN npm install --silent
+RUN npm install react-scripts@1.1.1 -g --silent
+
+# STEP: 6 - Copy source files from host computer to the container
+COPY . .
+
+# STEP: 7 - Build the app
+RUN npm run build
+
+# STEP: 8 - Add nginx
+FROM nginx:alpine
+
+# STEP: 9
+# RUN rm -rf /etc/nginx/default
+
+# STEP: 10
+# COPY default /etc/nginx/default
+# COPY ./.nginx/nginx.conf /etc/nginx/nginx.conf
+
+# STEP: 11
+# COPY --from=builder /app/.next /user/share/nginx/html
+COPY --from=builder /app/build /usr/share/nginx/html
+
+# STEP: 12
+EXPOSE 3000 80
+
+# STEP: 13
+CMD [ "nginx", "-g", "daemon off;"]

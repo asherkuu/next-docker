@@ -2,6 +2,9 @@
     "cSpell.ignoreWords": [
         "begeby",
         "chokidar",
-        "usepolling"
+        "dockerignore",
+        "nextdocker",
+        "usepolling",
+        "workdir"
     ]
 }

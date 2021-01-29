@@ -1,23 +1,30 @@
-# Specifies where to get the base image (Node v12 in our case) and creates a new container for it
-FROM node:15
+FROM node:alpine
 
-# Set working directory. Paths will be relative this WORKDIR.
+# Set working directory
 WORKDIR /app
 
-ENV PATH /app/node_modules/.bin:$PATH
+# Install PM2 globally
+RUN npm install --global pm2
+
+# Copy "package.json" and "package-lock.json" before other files
+# Utilise Docker cache to save re-installing dependencies if unchanged
+COPY ./package*.json ./
 
 # Install dependencies
-COPY package.json ./app/package.json
 RUN npm install
 
-# Copy source files from host computer to the container
-COPY . .
+# Copy all files
+COPY ./ ./
 
-# Build the app
+# Build app
 RUN npm run build
 
-# Specify port app runs on
+# Expose the listening port
 EXPOSE 3000
 
-# Run the app
-CMD [ "npm", "start" ]
+# Run container as non-root (unprivileged) user
+# The "node" user is provided in the Node.js Alpine base image
+USER node
+
+# Launch app with PM2
+CMD [ "pm2-runtime", "start", "npm", "--", "start" ]
